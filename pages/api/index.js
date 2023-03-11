@@ -2,7 +2,6 @@
 import { Configuration, OpenAIApi } from 'openai'
 
 export default async function handler (req, res) {
-  console.log(req.body.datoss ?? 'no hay datos')
   const configuration = new Configuration({
     apiKey: req.body.key
   })
@@ -12,5 +11,6 @@ export default async function handler (req, res) {
     messages: req.body.datoss
   })
   const datos = await respuesta.data
-  res.status(200).json({ result: datos })
+  console.log('Tokens:', datos.usage.total_tokens)
+  res.status(200).json({ result: datos.choices })
 }
