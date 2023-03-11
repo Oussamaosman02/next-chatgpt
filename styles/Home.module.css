@@ -66,7 +66,15 @@
   padding: 10px;
   border-radius: 15px;
   display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
   position: relative;
+}
+.ai code {
+  background-color: black;
+  padding: 0 5px;
 }
 .ai::before {
   width: 60px;

@@ -1,6 +1,8 @@
 import Head from 'next/head'
 import styles from '@/styles/Home.module.css'
+import ReactMarkdown from 'react-markdown'
 import { useEffect, useRef, useState } from 'react'
+import Float from '@/components/float'
 const random1 = Math.random() * 1000
 const random2 = Math.random() * 1000
 export default function Home () {
@@ -33,7 +35,7 @@ export default function Home () {
         body: JSON.stringify({ datoss, key })
       })
       res.json().then((result) => {
-        const resultado = result.result.choices[0].message.content
+        const resultado = result.result[0].message.content
         setConversation([...datoss, { role: 'assistant', content: resultado }])
       }
       )
@@ -63,6 +65,7 @@ export default function Home () {
         <link rel='icon' href='/favicon.ico' />
       </Head>
       <main className={styles.main}>
+        <Float />
         <form style={{ display: key ? 'flex' : 'none', gap: '10px', position: 'fixed', bottom: '10px', zIndex: '100' }} onSubmit={(e) => handleSubmit(e)}>
           <input style={{ padding: '10px', width: '85vw' }} placeholder='Mensaje' ref={refPre} />
           <button style={{ padding: '3px' }}>Enviar</button>
@@ -75,14 +78,24 @@ export default function Home () {
                   conversation.map((rp, i) => {
                     let st
                     let random
+                    let envelope
                     if (rp.role === 'user') {
                       st = styles.user
                       random = key ?? random1
+                      envelope = (child) => child
                     } else if (rp.role === 'assistant') {
                       st = styles.ai
                       random = random2
+                      envelope = (child) => {
+                        return (
+                          <ReactMarkdown>
+                            {child}
+                          </ReactMarkdown>
+                        )
+                      }
                     } else {
                       st = styles.sys
+                      envelope = (child) => child
                     }
                     return (
                       <li
@@ -90,9 +103,10 @@ export default function Home () {
                         style={{ '--url': `url('https://api.dicebear.com/5.x/adventurer/svg?seed=${random}')` }}
                         key={i}
                       >
+
                         {
-                    rp.content
-                  }
+                          envelope(rp.content)
+                        }
                       </li>
                     )
                   })
@@ -118,7 +132,7 @@ export default function Home () {
                     ¿Mis limitaciones? Descúbrelas por ti mismo 😎
                   </p>
                   <form style={{ display: key ? 'none' : 'flex', gap: '10px', flexDirection: 'column', width: '75%', justifyContent: 'center', alignItems: 'center' }} onSubmit={(e) => handleKey(e)}>
-                    <input style={{ padding: '10px', border: 'none', borderRadius: '10px', width: '75%' }} placeholder='api key' ref={refKey} />
+                    <input style={{ padding: '10px', border: 'none', borderRadius: '10px', width: '75%' }} placeholder='api key de OpenAi' ref={refKey} />
                     <button style={{ width: 'fit-content', padding: '1px 20px', border: 'none', borderRadius: '10px', marginBottom: '5px' }}>
                       Empezar
                     </button>
