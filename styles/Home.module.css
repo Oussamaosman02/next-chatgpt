@@ -3,25 +3,8 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  padding: 6rem;
+  padding: 3rem;
   min-height: 100vh;
-}
-.mess {
-  animation: anim 1s infinite linear;
-  z-index: 110;
-  position: fixed;
-  bottom: 20px;
-}
-@keyframes anim {
-  0%,
-  50%,
-  100% {
-    opacity: 0;
-  }
-  25%,
-  75% {
-    opacity: 1;
-  }
 }
 .pregunta {
   display: var(--display);
@@ -126,11 +109,10 @@
   align-items: center;
   width: 80%;
 }
-
 .nada ul li {
   list-style-type: square;
 }
-.keyform {
+.api {
   display: var(--display);
   gap: 10px;
   flex-direction: column;
@@ -138,18 +120,35 @@
   justify-content: center;
   align-items: center;
 }
-.keyform input {
+.api input {
   padding: 10px;
   border: none;
   border-radius: 10px;
   width: 75%;
 }
-.keyform button {
+.api button {
   width: fit-content;
   padding: 1px 20px;
   border: none;
   border-radius: 10px;
   margin-bottom: 5px;
+}
+.espera {
+  animation: anim 1s infinite linear;
+  z-index: 110;
+  position: fixed;
+  bottom: 20px;
+}
+@keyframes anim {
+  0%,
+  50%,
+  100% {
+    opacity: 0;
+  }
+  25%,
+  75% {
+    opacity: 1;
+  }
 }
 /* Mobile */
 @media (max-width: 700px) {
@@ -159,6 +158,9 @@
   .ul {
     width: 80vw;
     gap: 25px;
+  }
+  .nada {
+    min-height: 80vh;
   }
   .nada ul {
     gap: 15px;
@@ -171,20 +173,16 @@
     border-radius: 10px;
     padding: 2px;
   }
-  .keyform {
+  .api {
     gap: 15px;
     width: 95%;
   }
-  .keyform input {
+  .api input {
     width: 95%;
     text-align: center;
   }
-  .keyform button {
+  .api button {
     padding: 2px 15px;
     border-radius: 5px;
   }
-}
-
-/* Tablet and Smaller Desktop */
-@media (min-width: 701px) and (max-width: 1120px) {
 }

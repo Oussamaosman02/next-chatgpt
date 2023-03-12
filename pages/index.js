@@ -3,54 +3,61 @@ import styles from '@/styles/Home.module.css'
 import ReactMarkdown from 'react-markdown'
 import { useEffect, useRef, useState } from 'react'
 import Float from '@/components/float'
-const random1 = Math.random() * 1000
-const random2 = Math.random() * 1000
+
+const randNum = Math.random() * 1000
+
 export default function Home () {
-  const scrll = () => window.scrollTo({
+  // función para bajar cada vez que se recarga el componente
+  const scroll = () => window.scrollTo({
     top: document.documentElement.scrollHeight,
     behavior: 'smooth'
   })
+
+  // constantes
   const refPre = useRef()
   const refKey = useRef()
-  const [key, setKey] = useState('')
+  const [apiKey, setApiKey] = useState('')
   const [conversation, setConversation] = useState([{ role: 'system', content: 'Eres una inteligencia artificial.' }])
   const [esp, setEsp] = useState('')
+
+  // recoger la api key si está ya en el navegador
   useEffect(() => {
-    setKey(localStorage.getItem('key'))
-  }, [key, setKey])
+    setApiKey(localStorage.getItem('key'))
+  }, [apiKey, setApiKey])
+
+  // manejamos el formulario del preguntas
   async function handleSubmit (e) {
     e.preventDefault()
     const pregunta = refPre.current.value
-    scrll()
-    if (pregunta && key) {
+    scroll()
+    if (pregunta && apiKey) {
       setEsp('Generando respuesta')
-      const conver = [...conversation, { role: 'user', content: pregunta }]
-      setConversation(conver)
+      setConversation([...conversation, { role: 'user', content: pregunta }])
       refPre.current.value = ''
       const res = await fetch('/api', {
         method: 'POST',
         headers: {
           'Content-type': 'application/json'
         },
-        body: JSON.stringify({ conver, key })
+        body: JSON.stringify({ conversation, key: apiKey })
       })
-      res.json().then((result) => {
-        const resultado = result.result[0].message.content
-        setConversation([...conver, { role: 'assistant', content: resultado }])
+      res.json().then((res) => {
+        const resultado = res.result[0].message.content
+        setConversation([...conversation, { role: 'assistant', content: resultado }])
       }
       )
       setEsp('')
-      scrll()
+      scroll()
     } else {
       alert('Introduce una pregunta')
     }
-    scrll()
+    scroll()
   }
   function handleKey (e) {
     e.preventDefault()
     const valorKey = refKey.current.value
     if (valorKey) {
-      setKey(valorKey)
+      setApiKey(valorKey)
       localStorage.setItem('key', valorKey)
     } else {
       alert('introduce la api key')
@@ -66,7 +73,7 @@ export default function Home () {
       </Head>
       <main className={styles.main}>
         <Float />
-        <form className={styles.pregunta} style={{ '--display': key ? 'flex' : 'none' }} onSubmit={(e) => handleSubmit(e)}>
+        <form className={styles.pregunta} style={{ '--display': apiKey ? 'flex' : 'none' }} onSubmit={(e) => handleSubmit(e)}>
           <input placeholder='Mensaje' ref={refPre} />
           <button>Enviar</button>
         </form>
@@ -81,11 +88,11 @@ export default function Home () {
                     let envelope
                     if (rp.role === 'user') {
                       st = styles.user
-                      random = key ?? random1
+                      random = apiKey
                       envelope = (child) => child
                     } else if (rp.role === 'assistant') {
                       st = styles.ai
-                      random = random2
+                      random = randNum
                       envelope = (child) => {
                         return (
                           <ReactMarkdown>
@@ -119,7 +126,7 @@ export default function Home () {
                   </p>
                   <h3>Esta IA puede:</h3>
                   <ul>
-                    <li>Tener una variedad de aplicaciones, ya que interactuo con los usuarios en
+                    <li>Tener una variedad de aplicaciones, ya que interactúo con los usuarios en
                       tiempo real y ofrezco una experiencia de conversación más natural.
                     </li>
                     <li>Ser utilizada para proporcionar información y asistencia en tiempo real a los estudiantes,
@@ -129,9 +136,9 @@ export default function Home () {
                   </ul>
                   <p>¿Necesitas reiniciar la conversación? Reinicia la página 😅</p>
                   <p>
-                    ¿Mis limitaciones? Descúbrelas por ti mismo 😎
+                    ¿Mis limitaciones? Descubre si tengo por ti mismo 😎
                   </p>
-                  <form className={styles.keyform} style={{ '--display': key ? 'none' : 'flex' }} onSubmit={(e) => handleKey(e)}>
+                  <form className={styles.api} style={{ '--display': apiKey ? 'none' : 'flex' }} onSubmit={(e) => handleKey(e)}>
                     <input placeholder='api key de OpenAi' ref={refKey} />
                     <button>
                       Empezar
@@ -142,7 +149,7 @@ export default function Home () {
 
           }
         </ul>
-        <p className={styles.mess}>
+        <p className={styles.espera}>
           {esp}
         </p>
       </main>
