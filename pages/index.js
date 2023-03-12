@@ -24,19 +24,19 @@ export default function Home () {
     scrll()
     if (pregunta && key) {
       setEsp('Generando respuesta')
-      const datoss = [...conversation, { role: 'user', content: pregunta }]
-      setConversation(datoss)
+      const conver = [...conversation, { role: 'user', content: pregunta }]
+      setConversation(conver)
       refPre.current.value = ''
       const res = await fetch('/api', {
         method: 'POST',
         headers: {
           'Content-type': 'application/json'
         },
-        body: JSON.stringify({ datoss, key })
+        body: JSON.stringify({ conver, key })
       })
       res.json().then((result) => {
         const resultado = result.result[0].message.content
-        setConversation([...datoss, { role: 'assistant', content: resultado }])
+        setConversation([...conver, { role: 'assistant', content: resultado }])
       }
       )
       setEsp('')
@@ -66,9 +66,9 @@ export default function Home () {
       </Head>
       <main className={styles.main}>
         <Float />
-        <form style={{ display: key ? 'flex' : 'none', gap: '10px', position: 'fixed', bottom: '10px', zIndex: '100' }} onSubmit={(e) => handleSubmit(e)}>
-          <input style={{ padding: '10px', width: '85vw' }} placeholder='Mensaje' ref={refPre} />
-          <button style={{ padding: '3px' }}>Enviar</button>
+        <form className={styles.pregunta} style={{ '--display': key ? 'flex' : 'none' }} onSubmit={(e) => handleSubmit(e)}>
+          <input placeholder='Mensaje' ref={refPre} />
+          <button>Enviar</button>
         </form>
 
         <ul className={styles.ul}>
@@ -131,9 +131,9 @@ export default function Home () {
                   <p>
                     ¿Mis limitaciones? Descúbrelas por ti mismo 😎
                   </p>
-                  <form style={{ display: key ? 'none' : 'flex', gap: '10px', flexDirection: 'column', width: '75%', justifyContent: 'center', alignItems: 'center' }} onSubmit={(e) => handleKey(e)}>
-                    <input style={{ padding: '10px', border: 'none', borderRadius: '10px', width: '75%' }} placeholder='api key de OpenAi' ref={refKey} />
-                    <button style={{ width: 'fit-content', padding: '1px 20px', border: 'none', borderRadius: '10px', marginBottom: '5px' }}>
+                  <form className={styles.keyform} style={{ '--display': key ? 'none' : 'flex' }} onSubmit={(e) => handleKey(e)}>
+                    <input placeholder='api key de OpenAi' ref={refKey} />
+                    <button>
                       Empezar
                     </button>
                   </form>
