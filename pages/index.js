@@ -32,18 +32,19 @@ export default function Home () {
     scroll()
     if (pregunta && apiKey) {
       setEsp('Generando respuesta')
-      setConversation([...conversation, { role: 'user', content: pregunta }])
+      const data = [...conversation, { role: 'user', content: pregunta }]
+      setConversation([...data])
       refPre.current.value = ''
       const res = await fetch('/api', {
         method: 'POST',
         headers: {
           'Content-type': 'application/json'
         },
-        body: JSON.stringify({ conversation, key: apiKey })
+        body: JSON.stringify({ data, key: apiKey })
       })
       res.json().then((res) => {
         const resultado = res.result[0].message.content
-        setConversation([...conversation, { role: 'assistant', content: resultado }])
+        setConversation([...data, { role: 'assistant', content: resultado }])
       }
       )
       setEsp('')
