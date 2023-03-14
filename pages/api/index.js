@@ -11,6 +11,6 @@ export default async function handler (req, res) {
     messages: req.body.data
   })
   const datos = await respuesta.data
-  console.log('Tokens:', datos.usage.total_tokens)
-  res.status(200).json({ result: datos.choices })
+  const tokens = datos.usage.total_tokens
+  res.status(200).json({ result: datos.choices, tokens })
 }

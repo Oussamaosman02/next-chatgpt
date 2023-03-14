@@ -3,6 +3,7 @@ import styles from '@/styles/Home.module.css'
 import ReactMarkdown from 'react-markdown'
 import { useEffect, useRef, useState } from 'react'
 import Float from '@/components/float'
+import Tokens from '@/components/tokens'
 
 const randNum = Math.random() * 1000
 
@@ -19,7 +20,7 @@ export default function Home () {
   const [apiKey, setApiKey] = useState('')
   const [conversation, setConversation] = useState([{ role: 'system', content: 'Eres una inteligencia artificial.' }])
   const [esp, setEsp] = useState('')
-
+  const [tokens, setTokens] = useState(0)
   // recoger la api key si está ya en el navegador
   useEffect(() => {
     setApiKey(localStorage.getItem('key'))
@@ -44,6 +45,7 @@ export default function Home () {
       })
       res.json().then((res) => {
         const resultado = res.result[0].message.content
+        setTokens(res.tokens)
         setConversation([...data, { role: 'assistant', content: resultado }])
       }
       )
@@ -74,11 +76,11 @@ export default function Home () {
       </Head>
       <main className={styles.main}>
         <Float />
+        <Tokens tokens={tokens} />
         <form className={styles.pregunta} style={{ '--display': apiKey ? 'flex' : 'none' }} onSubmit={(e) => handleSubmit(e)}>
           <input placeholder='Mensaje' ref={refPre} />
           <button>Enviar</button>
         </form>
-
         <ul className={styles.ul}>
           {
             conversation.length > 1
@@ -147,7 +149,6 @@ export default function Home () {
                   </form>
                 </li>
                 )
-
           }
         </ul>
         <p className={styles.espera}>

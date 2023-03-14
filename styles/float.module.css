@@ -11,3 +11,17 @@
   align-items: center;
   padding: 3px;
 }
+.tokens {
+  position: absolute;
+  left: 30px;
+  top: 20px;
+  scale: 1.25;
+  color: black;
+  background-color: azure;
+  border: none;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3px;
+}
