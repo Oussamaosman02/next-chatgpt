@@ -152,6 +152,9 @@
 }
 /* Mobile */
 @media (max-width: 700px) {
+  .main {
+    padding: 5rem;
+  }
   .pregunta input {
     width: 75vw;
   }
