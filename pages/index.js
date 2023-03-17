@@ -17,6 +17,7 @@ export default function Home () {
   // constantes
   const refPre = useRef()
   const refKey = useRef()
+  const refModel = useRef()
   const [apiKey, setApiKey] = useState('')
   const [conversation, setConversation] = useState([{ role: 'system', content: 'Eres una inteligencia artificial.' }])
   const [esp, setEsp] = useState('')
@@ -30,6 +31,7 @@ export default function Home () {
   async function handleSubmit (e) {
     e.preventDefault()
     const pregunta = refPre.current.value
+    const modelo = refModel.current.value
     scroll()
     if (pregunta && apiKey) {
       setEsp('Generando respuesta')
@@ -41,7 +43,7 @@ export default function Home () {
         headers: {
           'Content-type': 'application/json'
         },
-        body: JSON.stringify({ data, key: apiKey })
+        body: JSON.stringify({ data, key: apiKey, modelo })
       })
       res.json().then((res) => {
         const resultado = res.result[0].message.content
@@ -78,6 +80,10 @@ export default function Home () {
         <Float />
         <Tokens tokens={tokens} />
         <form className={styles.pregunta} style={{ '--display': apiKey ? 'flex' : 'none' }} onSubmit={(e) => handleSubmit(e)}>
+          <select ref={refModel}>
+            <option value='gpt-3.5-turbo'>3</option>
+            <option value='gpt-4'>4</option>
+          </select>
           <input placeholder='Mensaje' ref={refPre} />
           <button>Enviar</button>
         </form>

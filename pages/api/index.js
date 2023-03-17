@@ -7,10 +7,11 @@ export default async function handler (req, res) {
   })
   const openai = new OpenAIApi(configuration)
   const respuesta = await openai.createChatCompletion({
-    model: 'gpt-3.5-turbo',
+    model: req.body.modelo,
     messages: req.body.data
   })
   const datos = await respuesta.data
   const tokens = datos.usage.total_tokens
+  console.log(tokens)
   res.status(200).json({ result: datos.choices, tokens })
 }
